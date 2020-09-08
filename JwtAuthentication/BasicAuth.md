@@ -31,7 +31,7 @@ Http protocol จะรับส่ง data โดยส่ง request ไปท
 >>
 >> ![jwt3](picture/jwt3.png)
 >> 
->>   - `Public Claim` => เป็น data ของ user ที่เราสร้างขึ้นเองที่สามารถเปิดเผยได้ เช่น username,e-mail,firstName,lastName เป็นต้น
+>>   - `Public Claim` => เป็น data ของ user ที่เราสร้างขึ้นเองที่สามารถเปิดเผยได้ เช่น userId , username , e-mail , firstName , lastName เป็นต้น
 >>
 >>   - `Private Claim`=> เป็น private data  ที่ผู้สร้างและผู้ใช้งาน token ตกลงร่วมกันที่จะใช้
 >> 
@@ -40,6 +40,8 @@ Http protocol จะรับส่ง data โดยส่ง request ไปท
 > - `Signature` => มันคือการเอา header และ payload มาเข้ารหัส(เข้ารหัสแยกกัน) แล้วเอาผลลัพธ์ของทั้ง 2 ส่วนมาต่อกันด้วยจุด( `.` ) แล้วทำการเข้ารหัส algorithm ด้วย secret key ก็จะได้เป็น Signature ออกมา
 > ![jwt4](picture/jwt4.png)
 > `Note: ` secret key เป็น string อะไรก็ได้ที่เราตั้งขึ้นมา และเราควรเก็บมันไว้ให้ดีอย่าให้คนอื่นรู้
+>
+> `Note :` JWT Token ส่วน header , payload เข้ารหัสด้วย base64
 >
 > ในการตรวจสอบ JWT Token ว่ามีการแก้ไขกลางทาง? , Token ถูกต้อง? ทำได้ ดังนี้
 > - แยกส่วน Signature ออกมา (`ซึ่ง Signature ไม่สามารถแก้ไขและมีความ unique เพราะมันถูกเข้ารหัส algorithm ด้วย secret key ที่มีเพียงเราที่รู้`)
@@ -54,3 +56,4 @@ Http protocol จะรับส่ง data โดยส่ง request ไปท
 > - https://konoesite.com/%E0%B8%97%E0%B8%B3%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%A3%E0%B8%B9%E0%B9%89%E0%B8%88%E0%B8%B1%E0%B8%81%E0%B8%81%E0%B8%B1%E0%B8%9A-jwt-b8fcf52aa008
 > - https://github.com/jwt-dotnet/jwt (`Jwt ของ Dotnet`)
 > - https://jasonwatmore.com/post/2019/10/11/aspnet-core-3-jwt-authentication-tutorial-with-example-api#app-settings-development-json (`How to Jwt Dotnet`)
+> - https://medium.com/@jamesirichai/%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%95%E0%B8%81%E0%B8%95%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%A3%E0%B8%B0%E0%B8%AB%E0%B8%A7%E0%B9%88%E0%B8%B2%E0%B8%87-hashing-%E0%B9%81%E0%B8%A5%E0%B8%B0-encryption-b9c2291ac935 (`Encryption ต่างกับ Hash ยังไง?`)
