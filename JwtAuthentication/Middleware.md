@@ -101,6 +101,44 @@
 >`RESTFUL API (RESTFUL)` -> Web Service ที่ใช้ REST ในการสร้าง(ใช้ HTTP GET,POST,PUT,DELETE ในการ request และ response กลับมาในรูปแบบของ JSON หรือ XML ระหว่าง client กับ server)
 
 > ## Cross-Origin Resource Sharing (CORS)
-> https://medium.com/nellika/cors-%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%AA%E0%B8%B4%E0%B9%88%E0%B8%87%E0%B8%97%E0%B8%B5%E0%B9%88-web-developer-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%84%E0%B8%A7%E0%B8%A3%E0%B8%A3%E0%B8%B9%E0%B9%89-c906b1b47958
+>
+> `Note : ` `Origin` คือ HTTP request Header ที่เอาไว้บอกว่า request ถูกเรียกจากที่ไหน แบ่งออกเป็น 3 ส่วน
+> - `Scheme` เช่น http, https
+> - `HostName` เช่น example.com, www.example.com
+> - `Port` เช่น 3000, 8000, 8080, 9000 
+> ![origin](picture/origin.png) \
+> `Ex.` http://example.com:8080 , https://example.com
+>
+> `CORS` คือ เมื่อเรามีการ fetch resource จาก Origin นึงไปอีก Origin , Web Browser จะส่ง option request ไปถาม server ของอีก Origin ว่าอนุญาติให้ Origin ต้นทางเข้าถึง resource ได้มั้ย? (`เป็นการอนุญาติสิทธิ์ให้เข้าถึง resource ข้าม Origin`)
+>
+> ตัวอย่างเช่น
+>
+> ถ้า https://example.com ต้องการเข้าถึง resource เช่น api , data ของ https://api.example.com 
+> 
+> - สิ่งที่เกิดขึ้น Web Browser จะส่ง preflight request ไปถาม https://api.example.com ก่อนว่า
+>   - จะให้ Origin https://example.com ส่ง request ไปไหม ?
+>   - จะให้ส่ง Method POST ไปไหม ?
+>   - จะให้ส่ง Cookie (credentials: 'include') ไปไหม ?
+>   - จะให้ส่ง Header Content-Type กับ X-Api-Key ไปไหม ?
+>  ![originHeader](picture/originHeader.png)
+> > `Note :` cookies คือ ข้อมูลขนาดเล็กที่เก็บไว้ที่ web browser พวกข้อมูลการเข้าถึงเว็บไซต์ , ข้อมูลส่วนตัวที่เราใช้ลงทะเบี่ยนในเว็บไซต์
+>
+> - ถ้า Server ของ https://api.example.com จะตอบกลับ Web Browser เมื่ออนุญาติให้ Origin https://example.com เข้าถึง resource
+>     - ให้ Origin https://example.com ส่ง request เข้ามาได้
+>     - ให้ส่ง Method GET กับ POST เข้ามาได้
+>     - ให้ JavaScript ส่ง Header Content-Type กับ X-Api-Key เข้ามาได้
+>     - ให้ส่ง Cookie เข้ามาได้
+>     - ให้ Browser จำคำตอบข้างบนไว้ 3600 วินาที จะได้ไม่ต้องมาถามซ้ำ
+>  ![originHeader](picture/serverOriginHeader.png)
+>
+> `Note : ` ใช้ Access-Control-Allow-Origin ในการอนุญาติสิทธิ์ให้ Origin อื่นเข้าถึง resource (`* => อนุญาติให้ทุก Origin`)
 
-> ## HTTPS
+> ## HTTPS(Hypertext Transfer Protocol Secure)
+> `Note : ` โดยปกติการส่ง data ผ่าน HTTP protocol จะอยู่ในรูปแบบ plain text ซึ่งมีข้อเสียเรื่องความปลอดภัยสามารถถูกดักจับได้ง่าย
+>
+> คือ protocol ที่เข้ารหัส data ที่รับส่งระหว่างเว็บไซต์กับผู้ใช้เพื่อให้เกิดความปลอดภัยในการับส่ง data บน Internet มากยิ่งขึ้น ไม่ถูกดักจับได้ง่าย
+>
+> `Note : ` SSL (Secure Socket Layer) คือ เทคโนโลยีในการเข้ารหัส data เพื่อให้เว็บไซต์หรือแอปพลิเคชั่นสามารถรับส่ง data ได้อย่างปลอดภัย มีความน่าเชื่อถือ
+> - ปลอดภัย มีความน่าเชื่อถือ
+> - ตรวจสอบความถูกต้องของ data ที่รับส่งได้
+> - data จะไม่ถูกแก้ไขหรือเปลี่ยนแปลงระหว่างทาง

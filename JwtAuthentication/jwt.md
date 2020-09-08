@@ -28,8 +28,30 @@
 > `Note : ` ถ้ามี authenticated user ถูกส่งมากับ current request มันก็จะถูกส่งผ่าน Jwt Middleware (`ถ้า request มี valid JWT access token`)
 
 > ## JWT Middleware
-> `Note : ` Middleware คือ pipe ที่เอาไว้ใช้ประโยชน์ดังนี้
+> `Note : ` Middleware คือ request pipeline ที่เอาไว้ใช้ประโยชน์ดังนี้
 > - เชื่อมต่อ application กับ network
 > - จัดการ request/response
 > - จัดการ/กรอง request ที่เราต้องการ
 > - สามารถจัดการให้ระบบเสถียรและสามารถรองรับข้อมูลได้ตลอดเวลา
+>
+> JWT Middleware จะจัดการกับ token ดังนี้
+> - validate token
+> - แตก userId ออกจาก Token 
+> - แนบ authenticated user เข้ามาใน current _`HttpContext.Items`_
+>
+> ถ้าไม่มี token หรือ ขั้นตอนด้านบน fail แล้วไม่มี user แนบมากับ http context จะ return response 401 Unauthorized กลับไป
+
+> ## Authenticate Request Model
+> เป็น model สำหรับ request ที่ใช้คุยกับฝั่ง client 
+>
+> ![authenticateRequestModel](picture/authenticateRequestModel.png)
+>
+> `Note :` [`Required`] attribute เอาไว้ทำ validate ถ้าไม่มีข้อมูลส่งมากับ request body มันจะแจ้ง error ตอนที่ call api 
+
+> ## Authenticate Response Model
+> เป็น model สำหรับ response ที่ใช้คุยกับฝั่ง client ซึ่งจะประกอบไปด้วยข้อมูลของ user ยกเว้น password กับ token 
+>
+> ![authenticateReponseModel](picture/authenticateReponseModel.png)
+
+> ## UserService
+> จะเอาไว้จัดการ authenticate user , return token , get all user , get use by id
