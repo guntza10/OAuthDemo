@@ -53,3 +53,4 @@ Http protocol จะรับส่ง data โดยส่ง request ไปท
 > - https://www.jittagornp.me/blog/what-is-jwt/
 > - https://konoesite.com/%E0%B8%97%E0%B8%B3%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%A3%E0%B8%B9%E0%B9%89%E0%B8%88%E0%B8%B1%E0%B8%81%E0%B8%81%E0%B8%B1%E0%B8%9A-jwt-b8fcf52aa008
 > - https://github.com/jwt-dotnet/jwt (`Jwt ของ Dotnet`)
+> - https://jasonwatmore.com/post/2019/10/11/aspnet-core-3-jwt-authentication-tutorial-with-example-api#app-settings-development-json (`How to Jwt Dotnet`)
