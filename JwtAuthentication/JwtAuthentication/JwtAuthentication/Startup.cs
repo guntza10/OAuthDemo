@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JwtAuthentication.Controllers;
 using JwtAuthentication.Interfaces;
+using JwtAuthentication.Middlewares;
 using JwtAuthentication.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,16 +30,18 @@ namespace JwtAuthentication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add CORS
+            services.AddCors();
+            services.AddControllers();
+            services.AddSwaggerGen();
+
             // register AppSettings
             services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
             services.AddSingleton<IAppSettings>(serviceProvider =>
             serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value);
+
             // add service
             services.AddScoped<IUserService, UserService>();
-
-            services.AddControllers();
-
-            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +62,14 @@ namespace JwtAuthentication
 
             app.UseRouting();
 
+            // global cors policy
+            app.UseCors(x => x
+             .AllowAnyOrigin()
+             .AllowAnyMethod()
+             .AllowAnyHeader());
+
+            // Jwt Middleware 
+            app.UseMiddleware<JwtMiddleware>();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

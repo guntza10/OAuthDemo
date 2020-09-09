@@ -7,7 +7,7 @@
 > - สามารถใช้แบบ anonymous(`anonymous middleware`) หรือ ใช้แบบ reusable class(`name middleware`) ทั้งหมดนี้เรียกว่า `"Middleware Component"`
 > - แต่ละ Middleware Component ใน request pipeline จะถูกเรียกใช้ต่อกันไปเรื่อยๆ
 >
-> ![middleware](picture/Middleware.png)
+> ![middleware](picture/Middleware.PNG)
 >
 > - แต่ละ middleware สามารถจัดการ operation ก่อนหรือหลัง next middleware ได้
 > - handle exception  ใน middleware ควรจะถูก call ก่อนใน pipeline และมันสามารถ catch exception ที่เกิดขึ้นในตอนสุดท้ายของ stage ของ pipeline
@@ -19,7 +19,7 @@
 > - `Run` delegate เป็น short-circuits จึงไม่มีการรับ next parameter จะถูกเอาไว้สุดท้ายเสมอ และทุกครั้งที่ execute เสร็จมันจะ terminate pipeline \
 > `Note : ` ไม่ว่าจะเอา `Use` or `Run` delegate ไปไว้ข้างหลัง `Run` delegate มันจะไม่ถูก call เพราะว่า `Run` delegate มันจะ terminate pipeline ทิ้งเสมอ
 >
-> ![middleware2](picture/Middleware2.png)
+> ![middleware2](picture/Middleware2.PNG)
 >
 > - Middleware จะถูกใช้ใน Startup.Configure \
 > `1. Exception/error handling` => 
@@ -29,7 +29,7 @@
 >      - ถ้า app runs ใน Production environment
 >        - `UseExceptionHandler()` => catch และ throw exception
 >        - `UseHsts()` => จัดการเกี่ยวกับ Strict-Transport-Security
-> ![middleware3](picture/Middleware3.png) 
+> ![middleware3](picture/Middleware3.PNG) 
 >
 > `2. HTTPS Redirection Middleware`
 > - `UseHttpsRedirection()`=> redirect HTTP requests ไปที่ HTTPS
@@ -62,7 +62,7 @@
 > ## Branch the middleware pipeline
 > เป็นการใช้ `Map` delegate ในการ map request path ที่เข้ามา ใช้เมื่อเราต้องการจัดการกับ request path ที่เฉพาะเจาะจง
 >
-> ![branchMiddleware](picture/BranchMiddleware.png)
+> ![branchMiddleware](picture/BranchMiddleware.PNG)
 > 
 > `Note :` อ่านรายละเอียดเพิ่มเติมได้ใน https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-3.1#branch-the-middleware-pipeline
 
@@ -74,7 +74,7 @@
 >
 > ### `HTTP request message`
 > คือรูปแบบ message ของ client ที่จะบอกข้อมูลรายละเอียดให้กับฝั่ง server รับทราบ ประกอบด้วย 3 ส่วน
->![httpRequestMessage](picture/HttpRequestMessage.png)
+>![httpRequestMessage](picture/HttpRequestMessage.PNG)
 > - `Request-Line` => คือส่วนที่บอก HTTP Method , URI , version HTTP protocol
 > - `Headers` => คือส่วนที่บอกข้อมูลและกฎต่างๆในการเชื่อมต่อ เช่น
 >   - accept => รูปแบบของข้อมูล เช่น application/json, text/html
@@ -85,7 +85,7 @@
 >
 > ### `HTTP request Method`
 > คือส่วนที่ใช้ระบุประเภทของ request 
-> ![httpRequestMethod](picture/HttpRequestMethod.png)
+> ![httpRequestMethod](picture/HttpRequestMethod.PNG)
 > มีอยู่ 4 ตัวที่ใช้บ่อย
 > - `GET` => ใช้สำหรับ request ที่เป็นการร้องขอ data
 > - `POST` => ใช้สำหรับ request ที่เป็นการ create หรือ เพิ่มค่าใหม่
@@ -106,7 +106,7 @@
 > - `Scheme` เช่น http, https
 > - `HostName` เช่น example.com, www.example.com
 > - `Port` เช่น 3000, 8000, 8080, 9000 
-> ![origin](picture/origin.png) \
+> ![origin](picture/origin.PNG) \
 > `Ex.` http://example.com:8080 , https://example.com
 >
 > `CORS` คือ เมื่อเรามีการ fetch resource จาก Origin นึงไปอีก Origin , Web Browser จะส่ง option request ไปถาม server ของอีก Origin ว่าอนุญาติให้ Origin ต้นทางเข้าถึง resource ได้มั้ย? (`เป็นการอนุญาติสิทธิ์ให้เข้าถึง resource ข้าม Origin`)
@@ -120,7 +120,7 @@
 >   - จะให้ส่ง Method POST ไปไหม ?
 >   - จะให้ส่ง Cookie (credentials: 'include') ไปไหม ?
 >   - จะให้ส่ง Header Content-Type กับ X-Api-Key ไปไหม ?
->  ![originHeader](picture/originHeader.png)
+>  ![originHeader](picture/originHeader.PNG)
 > > `Note :` cookies คือ ข้อมูลขนาดเล็กที่เก็บไว้ที่ web browser พวกข้อมูลการเข้าถึงเว็บไซต์ , ข้อมูลส่วนตัวที่เราใช้ลงทะเบี่ยนในเว็บไซต์
 >
 > - ถ้า Server ของ https://api.example.com จะตอบกลับ Web Browser เมื่ออนุญาติให้ Origin https://example.com เข้าถึง resource
@@ -129,7 +129,7 @@
 >     - ให้ JavaScript ส่ง Header Content-Type กับ X-Api-Key เข้ามาได้
 >     - ให้ส่ง Cookie เข้ามาได้
 >     - ให้ Browser จำคำตอบข้างบนไว้ 3600 วินาที จะได้ไม่ต้องมาถามซ้ำ
->  ![originHeader](picture/serverOriginHeader.png)
+>  ![originHeader](picture/serverOriginHeader.PNG)
 >
 > `Note : ` ใช้ Access-Control-Allow-Origin ในการอนุญาติสิทธิ์ให้ Origin อื่นเข้าถึง resource (`* => อนุญาติให้ทุก Origin`)
 

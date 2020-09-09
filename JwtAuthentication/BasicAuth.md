@@ -19,17 +19,17 @@ Http protocol จะรับส่ง data โดยส่ง request ไปท
 >
 > จะแบ่งออกเป็น 3 ส่วน
 > - `Header` => เป็น json data ที่ถูกเข้ารหัส และมีรูปแบบตามภาพ \
-> ![jwt1](picture/jwt1.png)
+> ![jwt1](picture/jwt1.PNG)
 >   - type => รูปแบบของ token
 >   - alg => algorithm ที่ใช้ในการ encryption signature
 >
 > - `Payload` => เป็น json data ของ user + data เฉพาะที่เอาไว้ระบุพฤติกรรมของ token หรือเรียกอีกชื่อว่า  JWT Claim  แล้วเข้ารหัสไว้ ตามภาพ
-> ![jwt2](picture/jwt2.png)
+> ![jwt2](picture/jwt2.PNG)
 >
 >> `Note :` JWT Claim แบ่งได้ 3 รูปแบบ
 >>   - `Registered Claim` 
 >>
->> ![jwt3](picture/jwt3.png)
+>> ![jwt3](picture/jwt3.PNG)
 >> 
 >>   - `Public Claim` => เป็น data ของ user ที่เราสร้างขึ้นเองที่สามารถเปิดเผยได้ เช่น userId , username , e-mail , firstName , lastName เป็นต้น
 >>
@@ -38,7 +38,7 @@ Http protocol จะรับส่ง data โดยส่ง request ไปท
 >> `หมายเหตุ :` ไม่ได้บังคับว่าจะต้องมี Claim ให้ครบทุกรูปแบบใน Payload
 >
 > - `Signature` => มันคือการเอา header และ payload มาเข้ารหัส(เข้ารหัสแยกกัน) แล้วเอาผลลัพธ์ของทั้ง 2 ส่วนมาต่อกันด้วยจุด( `.` ) แล้วทำการเข้ารหัส algorithm ด้วย secret key ก็จะได้เป็น Signature ออกมา
-> ![jwt4](picture/jwt4.png)
+> ![jwt4](picture/jwt4.PNG)
 > `Note: ` secret key เป็น string อะไรก็ได้ที่เราตั้งขึ้นมา และเราควรเก็บมันไว้ให้ดีอย่าให้คนอื่นรู้
 >
 > `Note :` JWT Token ส่วน header , payload เข้ารหัสด้วย base64
@@ -47,7 +47,7 @@ Http protocol จะรับส่ง data โดยส่ง request ไปท
 > - แยกส่วน Signature ออกมา (`ซึ่ง Signature ไม่สามารถแก้ไขและมีความ unique เพราะมันถูกเข้ารหัส algorithm ด้วย secret key ที่มีเพียงเราที่รู้`)
 > - แล้วนำส่วนของ header , payload มาถอดรหัส แล้วทำการสร้าง Signature อีกครั้ง แล้วนำ Signature ตัวใหม่ที่ได้มาเปรียบเทียบกับ Signature ที่เราแยกออกมาก่อนหน้านี้ ถ้าตรงกันแสดงว่าข้อมูลถูกต้องไม่ถูกแก้ไข token มีความน่าเชื่อถือสามารถนำไปใช้ต่อได้ \
 >` Note :` ก่อนจะถอดรหัส เราต้องรู้ก่อนว่าเราเข้ารหัสด้วย algorithm แบบไหน
-> ![jwt5](picture/jwt5.png)
+> ![jwt5](picture/jwt5.PNG)
 > 
 > `Note :` cookies คือ ข้อมูลขนาดเล็กที่เก็บไว้ที่ web browser พวกข้อมูลการเข้าถึงเว็บไซต์ , ข้อมูลส่วนตัวที่เราใช้ลงทะเบี่ยนในเว็บไซต์
 
@@ -57,3 +57,5 @@ Http protocol จะรับส่ง data โดยส่ง request ไปท
 > - https://github.com/jwt-dotnet/jwt (`Jwt ของ Dotnet`)
 > - https://jasonwatmore.com/post/2019/10/11/aspnet-core-3-jwt-authentication-tutorial-with-example-api#app-settings-development-json (`How to Jwt Dotnet`)
 > - https://medium.com/@jamesirichai/%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%95%E0%B8%81%E0%B8%95%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%A3%E0%B8%B0%E0%B8%AB%E0%B8%A7%E0%B9%88%E0%B8%B2%E0%B8%87-hashing-%E0%B9%81%E0%B8%A5%E0%B8%B0-encryption-b9c2291ac935 (`Encryption ต่างกับ Hash ยังไง?`)
+> - https://docs.microsoft.com/en-us/dotnet/api/system.identitymodel.tokens.jwt.jwtsecuritytokenhandler?view=azure-dotnet (`JwtSecurityTokenHandler`)
+> - https://docs.microsoft.com/en-us/dotnet/api/system.identitymodel.tokens.securitytokendescriptor?view=netframework-4.8&viewFallbackFrom=netcore-3.1 (`SecurityTokenDescriptor`)

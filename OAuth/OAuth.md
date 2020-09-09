@@ -14,29 +14,29 @@
 >
 > `1. Access Token` => Token ที่ใช้สำหรับเข้าถึงข้อมูล (ขอข้อมูล user จาก resource server)
 >
-> ![accessToken](AccessToken.png)
+> ![accessToken](AccessToken.PNG)
 >
 > `2. Refresh Token` => Token ที่ใช้สำหรับขอ Access Token ใหม่ เมื่อ Access Token เดิมหมดอายุ
 >
-> ![refreshToken](RefreshToken.png)
+> ![refreshToken](RefreshToken.PNG)
 >
 > `3.Authorization Code` => เป็น Token ที่ได้จากการ Grant Authorize แล้วเอา Token(Authorization Code) มาขอ Access Token อีกที
 >
-> ![authorizationCode1](AuthorizationCode1.png)
+> ![authorizationCode1](AuthorizationCode1.PNG)
 >
-> ![authorizationCode2](AuthorizationCode2.png)
+> ![authorizationCode2](AuthorizationCode2.PNG)
 >
 > `4.Device Code + User Code` => Token ที่ client ประเภท Smart Device ใช้ขอ Grant Authorize ซึ่ง Token ที่ได้จะเป็น `Device Code + User Code + Verification URI` จาก User เพื่อขอ Access Token
 >
-> ![deviceCode_UserCode1](DeviceCode_UserCode1.png)
+> ![deviceCode_UserCode1](DeviceCode_UserCode1.PNG)
 >
-> ![deviceCode_UserCode2](DeviceCode_UserCode2.png)
+> ![deviceCode_UserCode2](DeviceCode_UserCode2.PNG)
 >
-> ![deviceCode_UserCode3](DeviceCode_UserCode3.png)
+> ![deviceCode_UserCode3](DeviceCode_UserCode3.PNG)
 >
-> ![deviceCode_UserCode4](DeviceCode_UserCode4.png)
+> ![deviceCode_UserCode4](DeviceCode_UserCode4.PNG)
 >
-> ![deviceCode_UserCode5](DeviceCode_UserCode5.png)
+> ![deviceCode_UserCode5](DeviceCode_UserCode5.PNG)
 
 ## Grant Type
 > ` "รูปแบบ หรือ วิธีการ grant authorize เพื่อขอ Access Token" `
@@ -45,13 +45,13 @@
 > - client ขอ code 
 > - client นำ code ไปขอ Access Token \
 >
-> ![AuthorizationCode7](AuthorizationCode7.png)
+> ![AuthorizationCode7](AuthorizationCode7.PNG)
 >
-> ![AuthorizationCode8](AuthorizationCode8.png)
+> ![AuthorizationCode8](AuthorizationCode8.PNG)
 >
-> ![AuthorizationCode9](AuthorizationCode9.png)
+> ![AuthorizationCode9](AuthorizationCode9.PNG)
 >
-> ![AuthorizationCode10](AuthorizationCode10.png)
+> ![AuthorizationCode10](AuthorizationCode10.PNG)
 >
 > Authorization Code แบ่งย่อยได้ 2 แบบ คือ\
 > - `Authorization Code (Default)`
@@ -59,55 +59,55 @@
 > - `Authorization Code PKCE(Proof Key for Code Exchange)`
 >   => ใช้งานกับพวก Mobile App , Single Page App , Desktop App เพราะเราไม่สามารถเอา client_secret ไปเก็บไว้บนพวกที่กล่าวมาข้างต้นได้ เลยเกิด Flow PKCE ขึ้นมาเพื่อแก้ปัญหานี้ 
 >
-> ![AuthorizationCode3](AuthorizationCode3.png)
+> ![AuthorizationCode3](AuthorizationCode3.PNG)
 >
-> ![AuthorizationCode11](AuthorizationCode11.png)
+> ![AuthorizationCode11](AuthorizationCode11.PNG)
 >
-> ![AuthorizationCode12](AuthorizationCode12.png)
+> ![AuthorizationCode12](AuthorizationCode12.PNG)
 >
-> ![AuthorizationCode4](AuthorizationCode4.png)
+> ![AuthorizationCode4](AuthorizationCode4.PNG)
 >
-> ![AuthorizationCode5](AuthorizationCode5.png)
+> ![AuthorizationCode5](AuthorizationCode5.PNG)
 >
-> ![AuthorizationCode6](AuthorizationCode6.png)
+> ![AuthorizationCode6](AuthorizationCode6.PNG)
 >
-> ![AuthorizationCode13](AuthorizationCode13.png)
+> ![AuthorizationCode13](AuthorizationCode13.PNG)
 >
-> ![AuthorizationCode14](AuthorizationCode14.png)
+> ![AuthorizationCode14](AuthorizationCode14.PNG)
 >
 > `2. Client Credentials` => เป็นการ Grant Authorize ที่ใช้ `client_id` + `client_secret` ไปขอ Access Token มี `1 step`\
 > - client ขอ Access Token ด้วย `client_id` + `client_secret`
 >
-> ![clientCredentials1](ClientCredentials1.png)
+> ![clientCredentials1](ClientCredentials1.PNG)
 >
-> ![clientCredentials2](ClientCredentials2.png)
+> ![clientCredentials2](ClientCredentials2.PNG)
 >
 > `3. Device Code` => เป็นการ Grant Authorize ให้กับพวก Smart Device มี `3 steps`
 > - Device ขอ `device_code` + `user_code` + `verification_uri` จาก Authorization Server
 > - Device จะเอา `user_code` ที่ได้ไปกรอกใส่ `verification_uri` แล้ว Grant Authorize ได้ Access Token มา
 > - Device จะได้ Access Token จาก `device_code` + `user_code`
 >
-> ![deviceCode_userCode6](DeviceCode_UserCode6.png)
+> ![deviceCode_userCode6](DeviceCode_UserCode6.PNG)
 >
-> ![deviceCode_userCode7](DeviceCode_UserCode7.png)
+> ![deviceCode_userCode7](DeviceCode_UserCode7.PNG)
 >
-> ![deviceCode_userCode8](DeviceCode_UserCode8.png)
+> ![deviceCode_userCode8](DeviceCode_UserCode8.PNG)
 >
-> ![deviceCode_userCode9](DeviceCode_UserCode9.png)
+> ![deviceCode_userCode9](DeviceCode_UserCode9.PNG)
 >
 > `4. Refresh Token` => เป็นการ Grant Authorize เพื่อขอ Access Token ใหม่ ในกรณีที่ Access Token เดิมหมดอายุ มี `1 step`
 > - client ขอ Access Token ใหม่ ด้วย Refresh Token
 > 
-> ![refreshToken1](RefreshToken1.png)
+> ![refreshToken1](RefreshToken1.PNG)
 >
-> ![refreshToken2](RefreshToken2.png)
+> ![refreshToken2](RefreshToken2.PNG)
 >
 > `5. Implicit Token (ไม่ใช้แล้ว)` => เหมือนกับ Authorization Code แต่ return Access Token กลับมาทาง URI ด้วย `fragment(#) ` ทำให้มันมีช่องโหว่ ไม่ปลอดภัย
 >
->![implicitToken](ImplicitToken.png)
+>![implicitToken](ImplicitToken.PNG)
 >
 > `6. Password Grant (ไม่ใช้แล้ว)` => เป็นการ Grant Authorize โดยใช้ Username,Password เพื่อขอ Access Token การทำแบบนี้จะทำให้ Username + Password ของ User สามารถหลุดไปยัง client อื่นที่เชื่อมต่อกับ Authorization Server ได้
 >
->![passwordGrant1](PasswordGrant1.png)
+>![passwordGrant1](PasswordGrant1.PNG)
 >
->![passwordGrant2](PasswordGrant2.png)
+>![passwordGrant2](PasswordGrant2.PNG)
