@@ -59,3 +59,4 @@ Http protocol จะรับส่ง data โดยส่ง request ไปท
 > - https://medium.com/@jamesirichai/%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%95%E0%B8%81%E0%B8%95%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%A3%E0%B8%B0%E0%B8%AB%E0%B8%A7%E0%B9%88%E0%B8%B2%E0%B8%87-hashing-%E0%B9%81%E0%B8%A5%E0%B8%B0-encryption-b9c2291ac935 (`Encryption ต่างกับ Hash ยังไง?`)
 > - https://docs.microsoft.com/en-us/dotnet/api/system.identitymodel.tokens.jwt.jwtsecuritytokenhandler?view=azure-dotnet (`JwtSecurityTokenHandler`)
 > - https://docs.microsoft.com/en-us/dotnet/api/system.identitymodel.tokens.securitytokendescriptor?view=netframework-4.8&viewFallbackFrom=netcore-3.1 (`SecurityTokenDescriptor`)
+> - https://docs.microsoft.com/en-us/dotnet/api/microsoft.identitymodel.tokens.tokenvalidationparameters?view=azure-dotnet (`TokenValidationParameters`)

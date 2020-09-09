@@ -12,5 +12,6 @@ namespace JwtAuthentication.Services
         AuthenticateResponse Authenticate(AuthenticateRequest model);
         IEnumerable<User> GetAll();
         User GetById(string id);
+        User GetByUsername(string userName);
     }
 }

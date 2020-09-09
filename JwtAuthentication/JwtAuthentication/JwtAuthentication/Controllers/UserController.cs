@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JwtAuthentication.Auth;
 using JwtAuthentication.Models;
 using JwtAuthentication.Services;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,7 @@ namespace JwtAuthentication.Controllers
             _userService = userService;
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult GetAllUser()
         {
@@ -35,6 +37,19 @@ namespace JwtAuthentication.Controllers
                 message = "Create User Done!",
                 status = 200
             });
+        }
+
+        [HttpPost]
+        public IActionResult Authenticate(AuthenticateRequest user)
+        {
+            var response = _userService.Authenticate(user);
+
+            if (response == null) return BadRequest(new
+            {
+                message = "Username or Password is incorrect!"
+            });
+
+            return Ok(response);
         }
     }
 }

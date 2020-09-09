@@ -1,7 +1,10 @@
 # Asp.Net Core Jwt Authentication Structure
 
 > ## Controller
-> ใช้กำหนด endpoint,route สำหรับ Web Api เป็น entry point ของ Web Api ที่ client สามารถเข้าถึงผ่าน request
+> ใช้กำหนด endpoint , route สำหรับ Web Api เป็น entry point ของ Web Api ที่ client สามารถเข้าถึงผ่าน request จะจัดการ
+> - สร้าง User
+> - get User ทั้งหมด โดยที่จะต้องได้รับการ authenticate ก่อนจึงจะ authorize ให้เข้า endpoint ตัวนี้ได้
+> - authenticate user
 >
 > `Note :` endpoint คือ ulr ที่จะใช้ call api
 
@@ -40,6 +43,21 @@
 > - แนบ authenticated user เข้ามาใน current _`HttpContext.Items`_
 >
 > ถ้าไม่มี token หรือ ขั้นตอนด้านบน fail แล้วไม่มี user แนบมากับ http context จะ return response 401 Unauthorized กลับไป
+>
+> ![jwtMiddleware1](picture/jwt8.PNG)
+>
+> ![jwtMiddleware2](picture/jwt9.PNG)
+>
+> `Note :` 
+>   - `ValidateIssuerSigningKey` -> เป็นตัวที่บอกว่ามี SecurityKey ถูก sign ให้ SecurityToken มั้ย (`True`,`False`)
+>   - `IssuerSigningKey` -> เป็น SecurityKey ที่ถูกใช้ในการเข้ารหัส alogorithm ให้ Signature \
+> `Note :` SecurityKey ก็คือ Secret Key นั่นแหละ
+>   - `ValidateIssuer` -> จะให้ validate Issuer ด้วยมั้ยในขณะที่ validate token \
+>  `Note :` Issuer คือ เว็บ,บริษัทที่ออก token
+>   - `ValidateAudience` -> จะให้ validate Audience ด้วยมั้ยในขณะที่ validate token \
+> `Note :` Audience คือ ผู้รับ Token
+>   - `ClockSkew` -> set เวลาหมดอายุให้ token หลังจากใช้ validate เสร็จ
+
 
 > ## Authenticate Request Model
 > เป็น model สำหรับ request ที่ใช้คุยกับฝั่ง client 

@@ -55,11 +55,11 @@ namespace JwtAuthentication.Services
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.Username), // Registered Claim
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Exp,DateTime.UtcNow.AddMinutes(2).ToString()),
+                    new Claim(JwtRegisteredClaimNames.Exp,DateTime.UtcNow.AddMinutes(10).ToString()),
                     new Claim("FisrtName",user.FirstName), // Public Claim
                     new Claim("LastName",user.LastName)
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(2),
+                Expires = DateTime.UtcNow.AddMinutes(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -75,6 +75,11 @@ namespace JwtAuthentication.Services
         public User GetById(string id)
         {
             return _UserCollection.Find(it => it.Id == id).FirstOrDefault();
+        }
+
+        public User GetByUsername(string userName)
+        {
+            return _UserCollection.Find(it => it.Username == userName).FirstOrDefault();
         }
     }
 }

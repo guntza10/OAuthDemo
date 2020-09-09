@@ -13,7 +13,7 @@ namespace JwtAuthentication.Models
         public string LastName { get; set; }
         public string Username { get; set; }
 
-        [JsonIgnore]
+        //[JsonIgnore]
         public string Password { get; set; }
     }
 }
