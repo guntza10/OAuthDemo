@@ -62,7 +62,7 @@
 > ## Branch the middleware pipeline
 > เป็นการใช้ `Map` delegate ในการ map request path ที่เข้ามา ใช้เมื่อเราต้องการจัดการกับ request path ที่เฉพาะเจาะจง
 >
-> ![branchMiddleware](picture/BranchMiddleware.PNG)
+> ![branchMiddleware](picture/branchMiddleware.PNG)
 > 
 > `Note :` อ่านรายละเอียดเพิ่มเติมได้ใน https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-3.1#branch-the-middleware-pipeline
 
