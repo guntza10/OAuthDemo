@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JwtAuthentication.Auth;
+using JwtAuthentication.Entity;
+using JwtAuthentication.Exceptions;
 using JwtAuthentication.Models;
 using JwtAuthentication.Services;
+using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,18 +32,30 @@ namespace JwtAuthentication.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] User user)
+        public IActionResult CreateUser([FromBody] RegisterModel user)
         {
-            _userService.CreateUser(user);
-            return Ok(new
+            try
             {
-                message = "Create User Done!",
-                status = 200
-            });
+                var userData = user.Adapt<User>();
+                var userCreated = _userService.CreateUser(userData, user.Password);
+                return Ok(new
+                {
+                    message = "Create User Done!",
+                    userInfo = userCreated,
+                    status = 200
+                });
+            }
+            catch
+            {
+                return BadRequest(new
+                {
+                    message = "User Doesn't Create!"
+                });
+            }
         }
 
         [HttpPost]
-        public IActionResult Authenticate(AuthenticateRequest user)
+        public IActionResult Authenticate([FromBody]AuthenticateRequest user)
         {
             var response = _userService.Authenticate(user);
 

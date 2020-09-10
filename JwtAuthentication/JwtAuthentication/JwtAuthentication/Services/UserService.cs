@@ -1,5 +1,8 @@
-﻿using JwtAuthentication.Interfaces;
+﻿using JwtAuthentication.Entity;
+using JwtAuthentication.Exceptions;
+using JwtAuthentication.Interfaces;
 using JwtAuthentication.Models;
+using Mapster;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -29,25 +32,68 @@ namespace JwtAuthentication.Services
 
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
-            var user = _UserCollection.Find(it => it.Username == model.Username && it.Password == model.Password).FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password)) return null;
 
-            if (user == null) return null;
+            var userData = _UserCollection.Find(it => it.Username == model.Username).FirstOrDefault();
 
+            if (!checkUserExist(userData.Username)) return null;
+
+            if (!VerifyPasswordHash(model.Password, userData.PasswordHash, userData.PasswordSalt)) return null;
+
+            var user = userData.Adapt<UserModel>();
             var token = generateJwtToken(user);
 
             return new AuthenticateResponse(user, token);
         }
 
-        public void CreateUser(User user)
+        public User CreateUser(User user, string password)
         {
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentNullException("password", "Password is required!");
+
+            if (checkUserExist(user.Username)) throw new AppException($"Username {user.Username} is already existed!");
+
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+            user.PasswordHash = Convert.ToBase64String(passwordHash);
+            user.PasswordSalt = Convert.ToBase64String(passwordSalt);
             user.Id = Guid.NewGuid().ToString();
             _UserCollection.InsertOne(user);
+
+            return user;
         }
 
-        private string generateJwtToken(User user)
+        public IEnumerable<UserModel> GetAll()
+        {
+            var userEntity = _UserCollection.Find(it => true).ToEnumerable<User>();
+            var userData = userEntity.Adapt<IEnumerable<UserModel>>();
+            return userData;
+        }
+
+        public UserModel GetById(string id)
+        {
+            var userEntity = _UserCollection.Find(it => it.Id == id).FirstOrDefault();
+            var userData = userEntity.Adapt<UserModel>();
+            return userData;
+        }
+
+        public UserModel GetByUsername(string userName)
+        {
+            var userEntity = _UserCollection.Find(it => it.Username == userName).FirstOrDefault();
+            var userData = userEntity.Adapt<UserModel>();
+            return userData;
+        }
+
+        private bool checkUserExist(string username)
+        {
+            var userData = _UserCollection.Find(it => it.Username == username).FirstOrDefault();
+            return (userData != null) ? true : false;
+        }
+
+        private string generateJwtToken(UserModel user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_settings.SecretKey);
+            var key = Encoding.UTF8.GetBytes(_settings.SecretKey);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -68,19 +114,39 @@ namespace JwtAuthentication.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public IEnumerable<User> GetAll()
+        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            return _UserCollection.Find(it => true).ToEnumerable<User>();
+            if (password == null) throw new ArgumentNullException("password", "Password is required!");
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("password cannot be empty or whitespace only string!", "password");
+
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            }
         }
 
-        public User GetById(string id)
+        private static bool VerifyPasswordHash(string password, string passwordHash, string passwordSalt)
         {
-            return _UserCollection.Find(it => it.Id == id).FirstOrDefault();
-        }
+            if (password == null) throw new ArgumentNullException("password", "Password is required!");
 
-        public User GetByUsername(string userName)
-        {
-            return _UserCollection.Find(it => it.Username == userName).FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Password can not be null or empty only string!", "password");
+
+            var PasswordHash = Convert.FromBase64String(passwordHash);
+            var PasswordSalt = Convert.FromBase64String(passwordSalt);
+
+            if (PasswordHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected)", "passwordHash");
+            if (PasswordSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected)", "passwordSalt");
+
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(PasswordSalt))
+            {
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedHash.Length; i++)
+                {
+                    if (computedHash[i] != PasswordHash[i]) return false;
+                }
+            }
+            return true;
         }
     }
 }

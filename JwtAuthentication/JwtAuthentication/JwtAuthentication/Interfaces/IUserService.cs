@@ -1,4 +1,5 @@
-﻿using JwtAuthentication.Models;
+﻿using JwtAuthentication.Entity;
+using JwtAuthentication.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ namespace JwtAuthentication.Services
 {
     public interface IUserService
     {
-        void CreateUser(User user);
+        User CreateUser(User user, string password);
         AuthenticateResponse Authenticate(AuthenticateRequest model);
-        IEnumerable<User> GetAll();
-        User GetById(string id);
-        User GetByUsername(string userName);
+        IEnumerable<UserModel> GetAll();
+        UserModel GetById(string id);
+        UserModel GetByUsername(string userName);
     }
 }

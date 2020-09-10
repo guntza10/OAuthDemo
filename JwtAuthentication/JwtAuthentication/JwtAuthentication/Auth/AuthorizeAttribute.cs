@@ -14,7 +14,7 @@ namespace JwtAuthentication.Auth
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var user = (User)context.HttpContext.Items["User"];
+            var user = (UserModel)context.HttpContext.Items["User"];
             if(user == null)
             {
                 context.Result = new JsonResult(new { message = "Unauthorized na ja 5555+" }) { StatusCode = StatusCodes.Status401Unauthorized };

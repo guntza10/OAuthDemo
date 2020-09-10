@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JwtAuthentication.Entity;
 
 namespace JwtAuthentication.Models
 {
@@ -13,7 +14,7 @@ namespace JwtAuthentication.Models
         public string Username { get; set; }
         public string Token { get; set; }
 
-        public AuthenticateResponse(User user, string token)
+        public AuthenticateResponse(UserModel user, string token)
         {
             Id = user.Id;
             FirstName = user.FirstName;
