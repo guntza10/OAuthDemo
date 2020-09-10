@@ -57,7 +57,8 @@ namespace JwtAuthentication.Services
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Exp,DateTime.UtcNow.AddMinutes(10).ToString()),
                     new Claim("FisrtName",user.FirstName), // Public Claim
-                    new Claim("LastName",user.LastName)
+                    new Claim("LastName",user.LastName),
+                    //new Claim("Id",user.Id)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

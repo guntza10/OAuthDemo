@@ -52,7 +52,11 @@ namespace JwtAuthentication.Middlewares
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userName = jwtToken.Claims.FirstOrDefault(it => it.Type == "sub").Value;
 
+                //var userId = jwtToken.Claims.FirstOrDefault(it => it.Type == "Id").Value;
+
                 httpContext.Items["User"] = userService.GetByUsername(userName);
+
+                //httpContext.Items["User"] = userService.GetById(userId);
             }
             catch
             {
