@@ -60,3 +60,6 @@ Http protocol จะรับส่ง data โดยส่ง request ไปท
 > - https://docs.microsoft.com/en-us/dotnet/api/system.identitymodel.tokens.jwt.jwtsecuritytokenhandler?view=azure-dotnet (`JwtSecurityTokenHandler`)
 > - https://docs.microsoft.com/en-us/dotnet/api/system.identitymodel.tokens.securitytokendescriptor?view=netframework-4.8&viewFallbackFrom=netcore-3.1 (`SecurityTokenDescriptor`)
 > - https://docs.microsoft.com/en-us/dotnet/api/microsoft.identitymodel.tokens.tokenvalidationparameters?view=azure-dotnet (`TokenValidationParameters`)
+> - https://jasonwatmore.com/post/2020/04/19/angular-9-jwt-authentication-example-tutorial (`Jwt Angular`)
+> - https://jasonwatmore.com/post/2020/05/25/aspnet-core-3-api-jwt-authentication-with-refresh-tokens (`refresh token Dotnet`)
+> - https://jasonwatmore.com/post/2020/05/22/angular-9-jwt-authentication-with-refresh-tokens (`refresh token angular`)

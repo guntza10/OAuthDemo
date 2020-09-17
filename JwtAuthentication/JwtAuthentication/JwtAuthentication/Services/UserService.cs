@@ -34,13 +34,12 @@ namespace JwtAuthentication.Services
         {
             if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password)) return null;
 
-            var userData = _UserCollection.Find(it => it.Username == model.Username).FirstOrDefault();
+            var userExist = checkUserExist(model.Username);
+            if (userExist == null) return null;
 
-            if (!checkUserExist(userData.Username)) return null;
+            if (!VerifyPasswordHash(model.Password, userExist.PasswordHash, userExist.PasswordSalt)) return null;
 
-            if (!VerifyPasswordHash(model.Password, userData.PasswordHash, userData.PasswordSalt)) return null;
-
-            var user = userData.Adapt<UserModel>();
+            var user = userExist.Adapt<UserModel>();
             var token = generateJwtToken(user);
 
             return new AuthenticateResponse(user, token);
@@ -50,7 +49,8 @@ namespace JwtAuthentication.Services
         {
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentNullException("password", "Password is required!");
 
-            if (checkUserExist(user.Username)) throw new AppException($"Username {user.Username} is already existed!");
+            var userExist = checkUserExist(user.Username);
+            if (userExist != null) throw new AppException($"Username {user.Username} is already existed!");
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -84,10 +84,10 @@ namespace JwtAuthentication.Services
             return userData;
         }
 
-        private bool checkUserExist(string username)
+        private User checkUserExist(string username)
         {
             var userData = _UserCollection.Find(it => it.Username == username).FirstOrDefault();
-            return (userData != null) ? true : false;
+            return userData;
         }
 
         private string generateJwtToken(UserModel user)
