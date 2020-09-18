@@ -144,3 +144,15 @@
 > - data จะไม่ถูกแก้ไขหรือเปลี่ยนแปลงระหว่างทาง
 
 > ## CSRF กับ XSS 
+> `1. CSRF หรือ XSRF (Cross-Site Request Forgery)`
+> 
+> คือ การปลอมแปลง request ที่จะส่งจากที่นึงไปอีกที่นึงโดยที่ User ไม่ได้รู้ตัวหรือยินยอม
+>
+> วิธีป้องกันคือ
+> - สร้าง CSRF Token แนบไปกับ cookies (อยู่ใน header) แล้วก็ form ที่ใช้ส่ง data
+> - Server จะตรวจสอบว่า CSRF Token ที่ส่งมาจาก form และ header ตรงกันมั้ย? ถ้าตรงก็ user valid session ถ้าไม่ตรงก็ user invalid session \
+> `Note :` ถ้ามีการปลอมแปลง request ที่ยิงมาจากที่อื่น ตัว CSRF Token ที่อยู่ใน form จะไม่มีทางเหมือน CSRF ที่แนบอยู่กับ cookies ของเรา
+>
+> `2. XSS (Cross-Site Scripting)`
+>
+> คือ การโจมตีช่องโหว่ของ web โดยการฝัง code script ที่ไม่ปลอดภัย ลงไปบน Html เมื่อ user คนอื่นเปิด web script ที่ไม่ปลอดภัยก็จะทำงาน

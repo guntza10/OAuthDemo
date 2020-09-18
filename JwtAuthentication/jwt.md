@@ -8,12 +8,17 @@
 >
 > `Note :` endpoint คือ ulr ที่จะใช้ call api
 
-> ## Entity
+> ## User Entity
 >  คือ model ของ database ที่ใช้ส่ง data ระหว่าง service กับ controller
 >
 > `Note :` [JsonIgnore] คือ attribute ที่ป้องกัน property จากการ serialize และป้องกันไม่ให้ return ไปกับ response
 >
 > ![entity](picture/Entity.PNG)
+
+> ## RefreshToken Entity
+> คือ model ของ refresh token ที่เราต้องเก็บลง Database
+>
+> ![entity](picture/refreshEntity.PNG)
 
 > ## AppSettings
 > คือ class model ที่เอาไว้ map กับ property ที่ถูก define ไว้ใน `appsettings.json`
@@ -69,7 +74,10 @@
 > ## Authenticate Response Model
 > เป็น model สำหรับ response ที่ใช้คุยกับฝั่ง client ซึ่งจะประกอบไปด้วยข้อมูลของ user ยกเว้น password กับ token 
 >
-> ![authenticateReponseModel](picture/authenticateReponseModel.PNG)
+> ![authenticateReponseModel](picture/authenticateResponseModel.PNG)
+
+> ## Revoke Token Request Model
+>
 
 > ## UserService
 > จะเอาไว้จัดการ authenticate user , return token , get all user , get use by id
@@ -80,8 +88,14 @@
 >
 > `Note :` ใช้ nuget `System.IdentityModel.Tokens.Jwt` , `Microsoft.IdentityModel.Tokens`
 >
+> - `Authenticate()` => เอาไว้ authenticate user ถ้าผ่านก็จะ generate jwt token,refresh token แล้วเก็บ refresh token ขึ้นไปบน Database เป็น list ของ refresh token แล้ว return response data user ที่มี jwt token , refresh token กลับไป
 > ![jwt1](picture/jwt6.PNG)
 >
+> - `RefreshToken()`=> รับ active refresh token เข้ามาแล้ว return user data ที่มี Jwt Token กับ refresh token ตัวใหม่กลับไป refresh token ตัวเก่าจะถูก revoke ไม่สามารถเอามาใช้ได้อีก \
+> `Note : ` การที่ใช้ refresh token ขอ jwt token ใหม่ พร้อม refresh token ใหม่ โดยที่ refresh token เก่าจะถูก revoke ไม่สามารถใช้ได้อีก เราเรียกการทำแบบนี้ว่า `refresh token rotation` การทำแบบนี้จะช่วยเพิ่ม security ให้ app เพราะ refresh token จะมีอายุการใช้งานที่สั้น เมื่อมีการ rotate ตัว refresh token ตัวใหม่จะถูกเก็บไว้ที่ฟีลด์ ReplacedByToken ของ revoke token
+> - `RevokeToken()` => จะรับ active refresh token เข้ามาแล้ว revoke ให้มันไม่สามารถใช้งานได้อีก refresh token จะถูก revoke เมื่อมันมี revoke date และ ipAddress ของ user ที่ถูก revoke token จะเก็บไว้ที่ฟีลด์ RevokedByIp 
+> - `generateJwtToken()` => ใช้ generate Jwt Token ที่จะหมดอายุ 15 นาที
+> - `generateRefreshToken()` => ใช้ generate refresh token ที่จะหมดอายุ 7 วัน
 > ![jwt2](picture/jwt7.PNG)
 
 > ## JWT appsettings.json
@@ -102,3 +116,6 @@
 > ![configureService](picture/configure.PNG)
 >
 > `Note : ` ใน configure เราจะจัดการเกี่ยวกับ global CORS policy , จัดการ request เพื่อตรวจสอบ authenticate user ผ่าน JwtMiddleware 
+
+> ## Refresh Token
+>

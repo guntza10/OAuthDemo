@@ -8,11 +8,15 @@ using JwtAuthentication.Exceptions;
 using JwtAuthentication.Models;
 using JwtAuthentication.Services;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver.Core.WireProtocol.Messages.Encoders.BinaryEncoders;
+using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
 
 namespace JwtAuthentication.Controllers
 {
+    [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -23,7 +27,7 @@ namespace JwtAuthentication.Controllers
             _userService = userService;
         }
 
-        [Authorize]
+        //[AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllUser()
         {
@@ -31,6 +35,7 @@ namespace JwtAuthentication.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult CreateUser([FromBody] RegisterModel user)
         {
@@ -54,17 +59,73 @@ namespace JwtAuthentication.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost]
-        public IActionResult Authenticate([FromBody]AuthenticateRequest user)
+        public IActionResult Authenticate([FromBody] AuthenticateRequest user)
         {
-            var response = _userService.Authenticate(user);
+            var response = _userService.Authenticate(user, ipAddress());
 
             if (response == null) return BadRequest(new
             {
                 message = "Username or Password is incorrect!"
             });
 
+            setTokenCookie(response.RefreshToken);
+
             return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult RefreshToken()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+            var response = _userService.RefreshToken(refreshToken, ipAddress());
+
+            if (response == null)
+                return Unauthorized(new
+                {
+                    message = "Invalid Token"
+                });
+
+            setTokenCookie(refreshToken);
+
+            return Ok(response);
+        }
+
+
+        [HttpPost]
+        public IActionResult RevokeToken([FromBody] RevokeTokenRequest revokeToken)
+        {
+            var token = revokeToken.Token ?? Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(token))
+                return BadRequest(new { message = "Token is required!" });
+
+            var response = _userService.RevokeToken(token, ipAddress());
+
+            if (!response)
+                return NotFound(new { message = "Token not found" });
+
+            return Ok(new { message = "Token revoked" });
+        }
+
+        private void setTokenCookie(string refreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(7)
+            };
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+        }
+
+        private string ipAddress()
+        {
+            if (Request.Headers.ContainsKey("X-Forwarded-For"))
+                return Request.Headers["X-Forwarded-For"];
+            else
+                return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
         }
     }
 }
