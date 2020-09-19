@@ -93,7 +93,7 @@ namespace JwtAuthentication.Services
 
             var refreshToken = user.RefreshTokens.FirstOrDefault(it => it.Token == token);
 
-            if (!refreshToken.IsActive) return false;
+            //if (!refreshToken.IsActive) return false;
 
             user.RefreshTokens.Remove(refreshToken);
 
@@ -167,12 +167,12 @@ namespace JwtAuthentication.Services
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.Username), // Registered Claim
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Exp,DateTime.UtcNow.AddSeconds(30).ToString()),
+                    new Claim(JwtRegisteredClaimNames.Exp,DateTime.UtcNow.AddMinutes(1).ToString()),
                     new Claim("FisrtName",user.FirstName), // Public Claim
                     new Claim("LastName",user.LastName),
                     //new Claim("Id",user.Id)
                 }),
-                Expires = DateTime.UtcNow.AddSeconds(30),
+                Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -189,7 +189,7 @@ namespace JwtAuthentication.Services
                 return new RefreshToken
                 {
                     Token = Convert.ToBase64String(randomBytes),
-                    Expires = DateTime.UtcNow.AddDays(7),
+                    Expires = DateTime.UtcNow.AddMinutes(2),
                     Created = DateTime.UtcNow,
                     CreatedByIp = ipAddress
                 };

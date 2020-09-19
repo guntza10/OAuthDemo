@@ -8,15 +8,11 @@ using JwtAuthentication.Exceptions;
 using JwtAuthentication.Models;
 using JwtAuthentication.Services;
 using Mapster;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver.Core.WireProtocol.Messages.Encoders.BinaryEncoders;
-using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
 
 namespace JwtAuthentication.Controllers
 {
-    [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -27,7 +23,7 @@ namespace JwtAuthentication.Controllers
             _userService = userService;
         }
 
-        //[AllowAnonymous]
+        [Authorize]
         [HttpGet]
         public IActionResult GetAllUser()
         {
@@ -35,7 +31,6 @@ namespace JwtAuthentication.Controllers
             return Ok(result);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public IActionResult CreateUser([FromBody] RegisterModel user)
         {
@@ -59,7 +54,6 @@ namespace JwtAuthentication.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public IActionResult Authenticate([FromBody] AuthenticateRequest user)
         {
@@ -75,7 +69,6 @@ namespace JwtAuthentication.Controllers
             return Ok(response);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public IActionResult RefreshToken()
         {
@@ -83,17 +76,21 @@ namespace JwtAuthentication.Controllers
             var response = _userService.RefreshToken(refreshToken, ipAddress());
 
             if (response == null)
+            {
+                var IsRevoke = _userService.RevokeToken(refreshToken, ipAddress());
                 return Unauthorized(new
                 {
-                    message = "Invalid Token"
+                    message = "Invalid Token",
+                    IsRevoke = IsRevoke
                 });
+            }
 
             setTokenCookie(refreshToken);
 
             return Ok(response);
         }
 
-
+        [Authorize]
         [HttpPost]
         public IActionResult RevokeToken([FromBody] RevokeTokenRequest revokeToken)
         {
