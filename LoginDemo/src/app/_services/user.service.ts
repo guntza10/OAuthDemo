@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '@environments/environment';
 import { RegisterUser } from '../_models/RegisterUser';
 import { User } from '../_models/User';
 
@@ -8,15 +9,13 @@ import { User } from '../_models/User';
 })
 export class UserService {
 
-  private readonly endpointUrl = "https://localhost:4000/api/user/";
-
   constructor(private http: HttpClient) { }
 
   AuthenticateUser() {
-    return this.http.get<User>(this.endpointUrl + "Authenticate")
+    return this.http.get<User>(`${environment.endpointUrl}/Authenticate`);
   }
 
   RegisterUser(user: RegisterUser) {
-    return this.http.post(this.endpointUrl + "CreateUser", user)
+    return this.http.post(`${environment.endpointUrl}/CreateUser`, user);
   }
 }

@@ -39,4 +39,11 @@
 >
 > ถ้าผ่านเงื่อนไขข้างต้น จะนำ token ที่ได้มาเพิ่มใส่ Authorization header ของ request ที่จะส่งจาก Angular App 
 
+>## `User Model`
+> เป็น class model ของ user
+>
+> ![userModel](picture/userModel.PNG)
 
+> ## `User Service`
+> เป็น service ที่ใช้จัดการกับ api ทั้งหมดที่เกี่ยวกับ User
+>

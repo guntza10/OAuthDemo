@@ -1,7 +1,15 @@
-<nav class="navbar navbar-expand navbar-dark bg-dark">
-    <a class="nav-link active" routerLinkActive="/">Home</a>
-    <a class="nav-link" (click)="logOut()">Log Out</a>
-</nav>
+<div class="fluid-container bg-navbar">
+    <nav>
+        <ul>
+            <li>
+                <a routerLink="/">Home</a>
+            </li>
+            <li>
+                <a (click)="logOut()">logout</a>
+            </li>
+        </ul>
+    </nav>
+</div>
 
 <div class="container">
     <router-outlet></router-outlet>
