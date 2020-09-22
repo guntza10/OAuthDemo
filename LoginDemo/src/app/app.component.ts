@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { RefreshToken } from './_models/RefreshToken';
 import { User } from './_models/User';
 import { AuthenticationService } from './_services/authentication.service';
 

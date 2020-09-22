@@ -1,5 +1,10 @@
 # Jwt Authentication Angular
 
+> ## `App Initializer`
+> จะ run ก่อนที่ Angular App จะเริ่มทำงาน และจะ authenticate user ให้อัตโนมัติ โดย call ขอ refresh token เพื่อขอ Jwt Token ใหม่ ในกรณีที่ login ค้างไว้ในระบบ โดยที่ web browser ยังเก็บ refresh token cookie ไว้ 
+>
+> `Note :` ถ้า user login ค้างไว้ ไม่ได้ logout ออก เมื่อเปิด web ขึ้นมา ตัว Jwt Token จะหมดอายุแน่นอนเพราะอายุการใช้งานสั้นอยู่แล้ว ทำให้มันจะขอ refresh token ใหม่ให้อัตโนมัติเลย แล้วได้ Jwt token ใหม่มาใช้ต่อไม่ติดขัด
+
 > ## `Auth Guard`
 > เป็น angular route guard ที่ป้องกันไม่ให้ Unauthenticated User เข้าถึง จากการจำกัด route ใช้ CanActivate interface และทำงานผ่าน method canActivate() จะ return boolean โดยใช้ authentication service ในการ check user ที่ login เข้ามา
 > - `true` -> route activated อนุญาติให้เข้าถึง route เปิดหน้าต่อไป
@@ -18,6 +23,8 @@
 > - `constructor()` -> ทุกครั้งที่มีการ initialize service จะดึง data user จาก localStorage มาเก็บไว้ที่ subject  แล้วแปลงให้เป็น Observable เพื่อให้ component อื่นไป subscribe ต่อ
 > - `login()` -> จะทำการ check authenticate user แล้วส่ง response data user กลับมาพร้อม Jwt แล้ว store ไว้ที่ localStorage แล้ว publish response data user ไปให้ subscriber ทุกตัว(`BehaviorSubject emit data user`)
 > - `logout()` -> จะ remove data user ที่ localStorage แล้ว ส่งค่า null ไปเก็บที่ subject
+>
+> `Note :` การใช้ `{ withCredentials: true }` เป็น option เสริม เพื่อระบุว่า จะไม่ส่ง cookie ไปกับ Http request เพราะ refresh token อยู่ใน cookie เพื่อป้องกัน refresh token หลุด
 >
 > `Note : ` localStorage คือ Web Storage รูปแบบนึงที่เอาไว้เก็บ data ไว้ที่ฝั่ง client แบบเดียวกับ cookies แต่ไม่ต้องส่ง Http header ไปขอที่ server และเก็บ data ได้มากกว่า cookies 
 > - เก็บ data ถาวร 

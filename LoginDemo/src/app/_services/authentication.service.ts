@@ -5,6 +5,8 @@ import { User } from '../_models/User';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import { UserLogin } from '@app/_models/userLogin';
+import { RefreshToken } from '@app/_models/RefreshToken';
+import { JwtInterceptor } from '@app/_helpers/jwt.interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -25,10 +27,11 @@ export class AuthenticationService {
   }
 
   login(user: UserLogin) {
-    return this.http.post<User>(`${environment.endpointUrl}/Authenticate`, user).pipe(
+    return this.http.post<User>(`${environment.endpointUrl}/Authenticate`, user, { withCredentials: true }).pipe(
       map(user => {
         // localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
+        this.startRefreshTokenTimer();
         return user;
       })
     );
@@ -36,6 +39,37 @@ export class AuthenticationService {
 
   logout() {
     // localStorage.removeItem('currentUser');
+    this.http.post<any>(`${environment.endpointUrl}/RevokeToken`, {}, { withCredentials: true }).subscribe();
+    this.stopRefreshTokenTimer();
     this.currentUserSubject.next(null);
   }
+
+  refreshToken() {
+    return this.http.post<User>(`${environment.endpointUrl}/RefreshToken`, {}, { withCredentials: true })
+      .pipe(
+        map(user => {
+          this.currentUserSubject.next(user);
+          this.startRefreshTokenTimer();
+          return user;
+        }));
+  }
+
+  private refreshTokenTimeout;
+
+  private startRefreshTokenTimer() {
+    const jwtToken = JSON.parse(atob(this.currentUserValue.token.split('.')[1]));
+
+    console.log(`jwtToken : ${jwtToken.exp}`);
+
+    const expires = new Date(jwtToken.exp * 100);
+    console.log(`expires : ${expires}`);
+    const timeout = expires.getTime() - Date.now() - (60 * 1000);
+    console.log(`timeout : ${timeout}`);
+    // this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
+  }
+
+  private stopRefreshTokenTimer() {
+    clearTimeout(this.refreshTokenTimeout);
+  }
+
 }

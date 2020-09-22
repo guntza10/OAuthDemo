@@ -63,7 +63,7 @@ namespace JwtAuthentication
             app.UseRouting();
 
             // global cors policy
-            app.UseCors(x => x
+            app.UseCors(builder => builder
              .AllowAnyOrigin()
              .AllowAnyMethod()
              .AllowAnyHeader());
