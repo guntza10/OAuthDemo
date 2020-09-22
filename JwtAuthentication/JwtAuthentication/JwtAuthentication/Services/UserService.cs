@@ -46,6 +46,8 @@ namespace JwtAuthentication.Services
 
             userExist.RefreshTokens.Add(refreshToken);
 
+            if (userExist.RefreshTokens.Count > 3) userExist.RefreshTokens.RemoveAt(0);
+
             var def = Builders<User>.Update
             .Set(it => it.RefreshTokens, userExist.RefreshTokens);
             _UserCollection.UpdateOne(it => it.Id == userExist.Id, def);
@@ -73,6 +75,8 @@ namespace JwtAuthentication.Services
 
             user.RefreshTokens.AddRange(new List<RefreshToken> { refreshToken, newRefreshToken });
 
+            if(user.RefreshTokens.Count > 3) user.RefreshTokens.RemoveAt(0);
+            
             var def = Builders<User>.Update
             .Set(it => it.RefreshTokens, user.RefreshTokens);
 
@@ -101,6 +105,8 @@ namespace JwtAuthentication.Services
             refreshToken.RevokedByIp = ipAddress;
 
             user.RefreshTokens.Add(refreshToken);
+
+            if (user.RefreshTokens.Count > 3) user.RefreshTokens.RemoveAt(0);
 
             var def = Builders<User>.Update
             .Set(it => it.RefreshTokens, user.RefreshTokens);
