@@ -63,3 +63,5 @@ Http protocol จะรับส่ง data โดยส่ง request ไปท
 > - https://jasonwatmore.com/post/2020/04/19/angular-9-jwt-authentication-example-tutorial (`Jwt Angular`)
 > - https://jasonwatmore.com/post/2020/05/25/aspnet-core-3-api-jwt-authentication-with-refresh-tokens (`refresh token Dotnet`)
 > - https://jasonwatmore.com/post/2020/05/22/angular-9-jwt-authentication-with-refresh-tokens (`refresh token angular`)
+> - https://anurocha.com/2016/07/28/http-basic/ (`Http`)
+> - https://medium.com/icreativesystems/basic-http-3a2b05e5aa19 (`Http`)

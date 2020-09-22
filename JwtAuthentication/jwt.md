@@ -5,6 +5,16 @@
 > - สร้าง User
 > - get User ทั้งหมด โดยที่จะต้องได้รับการ authenticate ก่อนจึงจะ authorize ให้เข้า endpoint ตัวนี้ได้
 > - authenticate user
+> - refresh token
+> - revoke token
+> - set refresh token cookies ให้กับ response header
+> - get ip address
+>
+> ![jwtCont1](picture/jwtController1.PNG)
+> ![jwtCont2](picture/jwtController2.PNG)
+> ![jwtCont3](picture/jwtController3.PNG)
+> ![jwtCont4](picture/jwtController4.PNG)
+> ![jwtCont5](picture/jwtController5.PNG)
 >
 > `Note :` endpoint คือ ulr ที่จะใช้ call api
 
@@ -77,7 +87,9 @@
 > ![authenticateReponseModel](picture/authenticateResponseModel.PNG)
 
 > ## Revoke Token Request Model
->
+> เป็น model สำหรับ refresh token ที่จะถูก revoke
+> 
+> ![revokeTokenRequest](picture/revokeTokenRequest.PNG)
 
 > ## UserService
 > จะเอาไว้จัดการ authenticate user , return token , get all user , get use by id
@@ -88,15 +100,27 @@
 >
 > `Note :` ใช้ nuget `System.IdentityModel.Tokens.Jwt` , `Microsoft.IdentityModel.Tokens`
 >
-> - `Authenticate()` => เอาไว้ authenticate user ถ้าผ่านก็จะ generate jwt token,refresh token แล้วเก็บ refresh token ขึ้นไปบน Database เป็น list ของ refresh token แล้ว return response data user ที่มี jwt token , refresh token กลับไป
+> - `Authenticate()` => เอาไว้ authenticate user ถ้าผ่านก็จะ generate jwt token,refresh token แล้วเก็บ refresh token ขึ้นไปบน Database เป็น list ของ refresh token แล้ว return response data user ที่มี jwt token , refresh token กลับไป (`โดย jwt token กับ user data จะอยู่ใน response body ส่วน refresh token จะอยู่ใน response header`)
 > ![jwt1](picture/jwt6.PNG)
 >
-> - `RefreshToken()`=> รับ active refresh token เข้ามาแล้ว return user data ที่มี Jwt Token กับ refresh token ตัวใหม่กลับไป refresh token ตัวเก่าจะถูก revoke ไม่สามารถเอามาใช้ได้อีก \
+> - `RefreshToken()`=> รับ active refresh token เข้ามาแล้ว return user data ที่มี Jwt Token กับ refresh token ตัวใหม่กลับไป refresh token ตัวเก่าจะถูก revoke ไม่สามารถเอามาใช้ได้อีก (`จะถูกเรียกเรื่อยๆจาก client เมื่อ token ใกล้จะหมดอายุ`) \
 > `Note : ` การที่ใช้ refresh token ขอ jwt token ใหม่ พร้อม refresh token ใหม่ โดยที่ refresh token เก่าจะถูก revoke ไม่สามารถใช้ได้อีก เราเรียกการทำแบบนี้ว่า `refresh token rotation` การทำแบบนี้จะช่วยเพิ่ม security ให้ app เพราะ refresh token จะมีอายุการใช้งานที่สั้น เมื่อมีการ rotate ตัว refresh token ตัวใหม่จะถูกเก็บไว้ที่ฟีลด์ ReplacedByToken ของ revoke token
-> - `RevokeToken()` => จะรับ active refresh token เข้ามาแล้ว revoke ให้มันไม่สามารถใช้งานได้อีก refresh token จะถูก revoke เมื่อมันมี revoke date และ ipAddress ของ user ที่ถูก revoke token จะเก็บไว้ที่ฟีลด์ RevokedByIp 
+> ![userService](picture/jwt6-2.PNG)
+>
+> - `RevokeToken()` => จะรับ active refresh token เข้ามาแล้ว revoke ให้มันไม่สามารถใช้งานได้อีก refresh token จะถูก revoke เมื่อมันมี revoke date และ ipAddress ของ user ที่ถูก revoke token จะเก็บไว้ที่ฟีลด์ RevokedByIp (`จะถูก call เมื่อมีการ logout ออกจากระบบ`)
+> ![userService2](picture/jwt6-3.PNG)
+>
 > - `generateJwtToken()` => ใช้ generate Jwt Token ที่จะหมดอายุ 15 นาที
+> ![userService3](picture/jwt7.PNG)
+>
 > - `generateRefreshToken()` => ใช้ generate refresh token ที่จะหมดอายุ 7 วัน
-> ![jwt2](picture/jwt7.PNG)
+> ![userService4](picture/jwt6-4.PNG)
+>
+> - `CreatePasswordHash`=> ใช้ generate password hash
+> ![userService5](picture/jwt6-5.PNG)
+>
+> - `VerifyPasswordHash` => ใช้ verify password hash
+> ![userService6](picture/jwt6-6.PNG)
 
 > ## JWT appsettings.json
 > เอาไว้ config ค่าต่างเช่น secretKey, connectionString, DbName ,ชื่อ collection บน Database
@@ -118,4 +142,6 @@
 > `Note : ` ใน configure เราจะจัดการเกี่ยวกับ global CORS policy , จัดการ request เพื่อตรวจสอบ authenticate user ผ่าน JwtMiddleware 
 
 > ## Refresh Token
+> เอาไว้ใช้ขอ Token ใหม่เมื่อหมดอายุ โดย refresh token จะถูกเก็บไว้ที่ database เพื่อใช้ในการเช็คในการร้องขอ token ใหม่ว่ามีสิทธิ์มั้ย ?
 >
+>`Note :` ในตอนที่ Authenticate User จะได้ข้อมูล User พร้อมทั้ง token response body กลับไป ส่วน refresh token จะเก็บไว้ใน Http Cookie บน Http response header
