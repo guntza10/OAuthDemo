@@ -11,11 +11,11 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  AuthenticateUser() {
-    return this.http.get<User>(`${environment.endpointUrl}/Authenticate`);
-  }
-
   RegisterUser(user: RegisterUser) {
     return this.http.post(`${environment.endpointUrl}/CreateUser`, user);
+  }
+
+  GetAll() {
+    return this.http.get<User[]>(`${environment.endpointUrl}/GetAllUser`);
   }
 }

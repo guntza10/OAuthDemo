@@ -4,7 +4,10 @@
             You're logged in with angular Jwt
         </h3>
         <div class="card-body">
-            <h4 class="card-title">User from sucure api endpoint</h4>
+            <h4 class="card-title">User from sucure api endpoint with {{userLogin.username}}</h4>
+            <div *ngFor="let user of users;index as i">
+                {{i+1}}. {{user.username}} {{user.firstName}} {{user.lastName}}
+            </div>
         </div>
     </div>
 </div>
