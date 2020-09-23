@@ -63,10 +63,17 @@ namespace JwtAuthentication
             app.UseRouting();
 
             // global cors policy
+            //app.UseCors(builder => builder
+            // .AllowAnyOrigin()
+            // .AllowAnyMethod()
+            // .AllowAnyHeader()
+            // .AllowCredentials());
+
             app.UseCors(builder => builder
-             .AllowAnyOrigin()
-             .AllowAnyMethod()
-             .AllowAnyHeader());
+               .SetIsOriginAllowed(origin => true)
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials());
 
             // Jwt Middleware 
             app.UseMiddleware<JwtMiddleware>();

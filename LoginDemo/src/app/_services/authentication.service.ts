@@ -57,15 +57,20 @@ export class AuthenticationService {
   private refreshTokenTimeout;
 
   private startRefreshTokenTimer() {
-    const jwtToken = JSON.parse(atob(this.currentUserValue.token.split('.')[1]));
+    console.log(`jwtToken : ${this.currentUserValue.token}`);
+    const jwtTokenPayload = JSON.parse(atob(this.currentUserValue.token.split('.')[1]));
 
-    console.log(`jwtToken : ${jwtToken.exp}`);
+    console.log(`jwtTokenPayload : ${JSON.stringify(jwtTokenPayload)}`)
+    console.log(`jwtToken expires : ${jwtTokenPayload.exp}`);
 
-    const expires = new Date(jwtToken.exp * 100);
+    const expires = new Date(jwtTokenPayload.exp * 1000);
     console.log(`expires : ${expires}`);
+    console.log(`expires.getTime() : ${expires.getTime()}`);
+    console.log(`Date.now() : ${Date.now()}`);
+
     const timeout = expires.getTime() - Date.now() - (60 * 1000);
     console.log(`timeout : ${timeout}`);
-    // this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
+    this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
   }
 
   private stopRefreshTokenTimer() {

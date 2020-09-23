@@ -20,7 +20,11 @@ export class LoginComponent implements OnInit {
   error = '';
   userData: User;
 
-  constructor(private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private authService: AuthenticationService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private authService: AuthenticationService) {
+    if (authService.currentUserValue) {
+      this.router.navigate(['/']);
+    }
+  }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -37,9 +41,9 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
 
-    this.userLogin = new UserLogin;
-    this.userLogin.username = this.formUserLogin.username.value;
-    this.userLogin.password = this.formUserLogin.password.value;
+    // this.userLogin = new UserLogin;
+    // this.userLogin.username = this.formUserLogin.username.value;
+    // this.userLogin.password = this.formUserLogin.password.value;
 
     this.authService.login(this.loginForm.value)
       .subscribe(res => {

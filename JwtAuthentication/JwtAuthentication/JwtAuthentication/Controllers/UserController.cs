@@ -77,15 +77,13 @@ namespace JwtAuthentication.Controllers
 
             if (response == null)
             {
-                var IsRevoke = _userService.RevokeToken(refreshToken, ipAddress());
                 return Unauthorized(new
                 {
-                    message = "Invalid Token",
-                    IsRevoke = IsRevoke
+                    message = "Invalid Token"
                 });
             }
 
-            setTokenCookie(refreshToken);
+            setTokenCookie(response.RefreshToken);
 
             return Ok(response);
         }

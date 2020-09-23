@@ -14,13 +14,14 @@ export class ErrorInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError(err => {
-        if (err.status == 401) {
+        if ([401, 403].includes(err.status) && this.authenticationService.currentUserValue) {
           this.authenticationService.logout();
+          console.log(`401 or 403 Error`);
           // reload current url
           location.reload();
         }
 
-        const error = err.error.message || err.statusText;
+        const error = (err && err.error && err.error.message) || err.statusText;
         return throwError(error);
       })
     );
