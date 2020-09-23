@@ -59,7 +59,7 @@ export class AuthenticationService {
   private startRefreshTokenTimer() {
     console.log(`jwtToken : ${this.currentUserValue.token}`);
     const jwtTokenPayload = JSON.parse(atob(this.currentUserValue.token.split('.')[1]));
-
+    
     console.log(`jwtTokenPayload : ${JSON.stringify(jwtTokenPayload)}`)
     console.log(`jwtToken expires : ${jwtTokenPayload.exp}`);
 
@@ -76,5 +76,4 @@ export class AuthenticationService {
   private stopRefreshTokenTimer() {
     clearTimeout(this.refreshTokenTimeout);
   }
-
 }

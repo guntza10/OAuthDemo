@@ -4,6 +4,8 @@
 > จะ run ก่อนที่ Angular App จะเริ่มทำงาน และจะ authenticate user ให้อัตโนมัติ โดย call ขอ refresh token เพื่อขอ Jwt Token ใหม่ ในกรณีที่ login ค้างไว้ในระบบ โดยที่ web browser ยังเก็บ refresh token cookie ไว้ 
 >
 > `Note :` ถ้า user login ค้างไว้ ไม่ได้ logout ออก เมื่อเปิด web ขึ้นมา ตัว Jwt Token จะหมดอายุแน่นอนเพราะอายุการใช้งานสั้นอยู่แล้ว ทำให้มันจะขอ refresh token ใหม่ให้อัตโนมัติเลย แล้วได้ Jwt token ใหม่มาใช้ต่อไม่ติดขัด
+>
+> ![appInitializer](picture/appInitializer.PNG)
 
 > ## `Auth Guard`
 > เป็น angular route guard ที่ป้องกันไม่ให้ Unauthenticated User เข้าถึง จากการจำกัด route ใช้ CanActivate interface และทำงานผ่าน method canActivate() จะ return boolean โดยใช้ authentication service ในการ check user ที่ login เข้ามา
@@ -21,8 +23,21 @@
 >
 > มีการใช้ method
 > - `constructor()` -> ทุกครั้งที่มีการ initialize service จะดึง data user จาก localStorage มาเก็บไว้ที่ subject  แล้วแปลงให้เป็น Observable เพื่อให้ component อื่นไป subscribe ต่อ
-> - `login()` -> จะทำการ check authenticate user แล้วส่ง response data user กลับมาพร้อม Jwt แล้ว store ไว้ที่ localStorage แล้ว publish response data user ไปให้ subscriber ทุกตัว(`BehaviorSubject emit data user`)
-> - `logout()` -> จะ remove data user ที่ localStorage แล้ว ส่งค่า null ไปเก็บที่ subject
+> ![authService1](picture/authenticationService2.PNG)
+>
+> - `login()` -> จะทำการ check authenticate user แล้วส่ง response data user กลับมา แล้ว publish response data user ไปให้ subscriber ทุกตัว(`BehaviorSubject emit data user`) แล้วเริ่มทำ `startRefreshTokenTimer()` ตัวนับเวลาในการ refresh token
+> ![authService2](picture/authenticationService3.PNG)
+>
+> - `logout()` -> จะ call api revoke refresh token แล้วเรียก `stopRefreshTokenTimer()` เคลียร์ timeout ทั้งหมดที่ทำงานอยู่ใน `startRefreshTokenTimer()` ที่ถูกปล่อยให้มันทำงานเรื่อยๆ
+> ![authService3](picture/authenticationService4.PNG)
+>
+> - `refreshToken()` -> จะ call api เพื่อ refresh token แล้วเอา response data ที่ได้ไปเก็บไว้ที่ Behavior Subject จากนั้นเริ่มทำ `startRefreshTokenTimer()` ตัวนับเวลาในการ refresh Token
+> ![authService4](picture/authenticationService5.PNG)
+>
+> - `startRefreshTokenTimer()` -> เป็นตัวนับเวลาในการ refresh token โดยจะ set timeout ให้มัน call api refresh token จากเวลา expires ของ jwt ในส่วน payload (`jwt claim: exp`) มาลบกับเวลาปัจจุบัน (`Date.Now()`) จะได้เวลาที่ expires แล้วลบเพิ่มอีก 60 วินาที จะได้ timeout ก่อนจะ expires 60 วินาที
+> - `stopRefreshTokenTimer()` -> clear timeout ทั้งหมดทิ้ง
+>
+> ![authService5](picture/authenticationService6.PNG)
 >
 > `Note :` การใช้ `{ withCredentials: true }` เป็น option เสริม เพื่อระบุว่า จะไม่ส่ง cookie ไปกับ Http request เพราะ refresh token อยู่ใน cookie เพื่อป้องกัน refresh token หลุด
 >
@@ -36,7 +51,7 @@
 > - localStorage.removeItem(key) => การลบ data โดยใช้ key ref
 > - localStorage.clear() => clear data ทั้งหมดใน locatStorage
 >
-> ![authService](picture/authService.PNG)
+> ![authService](picture/authenticationService1.PNG)
 
 > ## `Http Error Interceptor`
 > เอาไว้จัดการ response error ที่ได้จาก api
@@ -110,9 +125,11 @@
 > เป็นการ config ค่าต่างๆ เช่น endpoint url api เพื่อให้เวลา lauch มันจะ lauch ตาม config environment
 >
 > ![environmentProduct](picture/environmentProduct.PNG)
+>
 >   environment ของ product (`environment.prod.ts`)
 >
 > ![environment](picture/environment.PNG)
+>
 >  environment ของ dev  (`environment.ts`)
 >
 > `Note :` มีผลตอน build --prod
