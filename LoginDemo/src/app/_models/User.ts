@@ -1,7 +1,8 @@
 export class User {
     id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
+    bankName: string;
+    bankAccountName: string;
+    bankAccountNo: string;
+    balance: number;
     token?: string;
 }

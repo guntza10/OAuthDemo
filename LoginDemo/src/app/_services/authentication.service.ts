@@ -27,7 +27,7 @@ export class AuthenticationService {
   }
 
   login(user: UserLogin) {
-    return this.http.post<User>(`${environment.endpointUrl}/Authenticate`, user, { withCredentials: true }).pipe(
+    return this.http.post<User>(`${environment.endpointUrl}/Users/Authenticate`, user, { withCredentials: true }).pipe(
       map(user => {
         // localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
@@ -39,13 +39,13 @@ export class AuthenticationService {
 
   logout() {
     // localStorage.removeItem('currentUser');
-    this.http.post<any>(`${environment.endpointUrl}/RevokeToken`, {}, { withCredentials: true }).subscribe();
+    this.http.post<any>(`${environment.endpointUrl}/Users/RevokeToken`, {}, { withCredentials: true }).subscribe();
     this.stopRefreshTokenTimer();
     this.currentUserSubject.next(null);
   }
 
   refreshToken() {
-    return this.http.post<User>(`${environment.endpointUrl}/RefreshToken`, {}, { withCredentials: true })
+    return this.http.post<User>(`${environment.endpointUrl}/Users/RefreshToken`, {}, { withCredentials: true })
       .pipe(
         map(user => {
           this.currentUserSubject.next(user);

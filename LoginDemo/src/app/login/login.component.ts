@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      'username': [''],
+      'id': [''],
       'password': ['']
     });
 
@@ -48,8 +48,10 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginForm.value)
       .subscribe(res => {
         this.userData = res;
-        console.log(`username : ${this.userData.username}`);
+        console.log(`Id : ${this.userData.id}`);
         console.log(`returnUrl : ${this.returnUrl}`);
+        console.log('userData', this.userData);
+
         this.router.navigate([this.returnUrl]);
         // this.router.navigate(['home', { userName: this.userData.username }]);
       }, err => {

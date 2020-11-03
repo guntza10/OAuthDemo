@@ -23,7 +23,7 @@ namespace JwtAuthentication.Controllers
             _userService = userService;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public IActionResult GetAllUser()
         {
